@@ -28,24 +28,35 @@ This project extends the traditional 3×3 format by enlarging the board and rede
 🛠️ Technologies Used
 
  C Programming Language
+ 
  Standard Input/Output Library
+ 
  GCC / Turbo C Compiler
+ 
 
 🎯 Game Rules
 
 The game is played on a 5×5 board.
+
 Players alternately place X and O symbols.
+
 The first player to align four consecutive symbols wins.
+
 Valid alignments include horizontal, vertical, and diagonal patterns.
+
 If all cells are filled without a winning sequence, the match results in a draw.
 
 
 📚 Learning Outcomes
 
 Proficiency in handling two-dimensional arrays
+
 Development of scalable and maintainable game logic
+
 Implementation of pattern-recognition algorithms
+
 Strengthening input validation techniques
+
 Introduction to fundamental AI decision-making logic
 
 
