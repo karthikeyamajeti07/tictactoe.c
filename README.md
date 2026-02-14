@@ -57,5 +57,3 @@ Introduction to fundamental AI decision-making logic
  Persistent score tracking mechanism
  Online multiplayer functionality
 
-
-⭐ If you find this project valuable, consider starring the repository on GitHub!
