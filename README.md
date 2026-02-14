@@ -37,7 +37,7 @@ The game is played on a 5×5 board.
 Players alternately place X and O symbols.
 The first player to align four consecutive symbols wins.
 Valid alignments include horizontal, vertical, and diagonal patterns.
-If all cells are filled without a winning sequence, the match results in a drrw.
+If all cells are filled without a winning sequence, the match results in a draw.
 
 
 📚 Learning Outcomes
@@ -53,7 +53,10 @@ Introduction to fundamental AI decision-making logic
 🔮 Future Enhancements
 
  Multi-level AI difficulty system
+ 
  Graphical User Interface (GUI) integration
+ 
  Persistent score tracking mechanism
+ 
  Online multiplayer functionality
 
