@@ -1,0 +1,305 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <ctype.h>
+
+#define SIZE 5
+#define WIN 4
+
+char board[SIZE][SIZE];
+char p1name[50];
+char p2name[50];
+int p1score=0,p2score=0;
+
+void input(){
+    while(getchar()!='\n');
+}
+
+void initialize(){
+    for(int i=0;i<SIZE;i++)
+        for(int j=0;j<SIZE;j++)
+            board[i][j]=' ';
+}
+
+void display(){
+    printf("\n    1   2   3   4   5\n");
+    for(int i=0;i<SIZE;i++){
+        printf("  +---+---+---+---+---+\n");
+        printf("%d |",i+1);
+        for(int j=0;j<SIZE;j++)
+            printf(" %c |",board[i][j]);
+        printf("\n");
+    }
+    printf("  +---+---+---+---+---+\n");
+}
+
+int validname(char name[]){
+    if(strlen(name)==0)
+        return 0;
+
+    for(int i=0;name[i]!='\0';i++){
+        if(name[i]==' ')
+            continue;
+
+        if(!isalpha(name[i]))
+            return 0;
+    }
+    return 1;
+}
+
+void formatname(char name[]){
+    name[0]=toupper(name[0]);
+    for(int i=1;name[i]!='\0';i++){
+        if(name[i-1]==' ')
+            name[i]=toupper(name[i]);
+        else
+            name[i]=tolower(name[i]);
+    }
+}
+
+int direction(int row,int col,int drow,int dcol,char mark){
+    for(int k=0;k<WIN;k++){
+        int r=row+k*drow;
+        int c=col+k*dcol;
+
+        if(r<0||r>=SIZE||c<0||c>=SIZE)
+            return 0;
+
+        if(board[r][c]!=mark)
+            return 0;
+    }
+    return 1;
+}
+
+int winner(char mark){
+    for(int i=0;i<SIZE;i++){
+        for(int j=0;j<SIZE;j++){
+            if(board[i][j]==mark){
+                if(direction(i,j,0,1,mark))
+                    return 1;
+                if(direction(i,j,1,0,mark))
+                    return 1;
+                if(direction(i,j,1,1,mark))
+                    return 1;
+                if(direction(i,j,1,-1,mark))
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int draw(){
+    for(int i=0;i<SIZE;i++)
+        for(int j=0;j<SIZE;j++)
+            if(board[i][j]==' ')
+                return 0;
+    return 1;
+}
+
+int tryMove(char mark){
+    for(int i=0;i<SIZE;i++){
+        for(int j=0;j<SIZE;j++){
+            if(board[i][j]==' '){
+                board[i][j]=mark;
+                if(winner(mark))
+                    return 1;
+                board[i][j]=' ';
+            }
+        }
+    }
+    return 0;
+}
+
+void computer(){
+
+    for(int i=0;i<SIZE;i++){
+        for(int j=0;j<SIZE;j++){
+            if(board[i][j]==' '){
+                board[i][j]='O';
+                if(winner('O')){
+                    printf("COMPUTER CHOSE: %d %d\n",i+1,j+1);
+                    return;
+                }
+                board[i][j]=' ';
+            }
+        }
+    }
+
+    for(int i=0;i<SIZE;i++){
+        for(int j=0;j<SIZE;j++){
+            if(board[i][j]==' '){
+                board[i][j]='X';
+                if(winner('X')){
+                    board[i][j]='O';
+                    printf("COMPUTER CHOSE: %d %d\n",i+1,j+1);
+                    return;
+                }
+                board[i][j]=' ';
+            }
+        }
+    }
+    
+    int r,c;
+    do{
+        r=rand()%SIZE;
+        c=rand()%SIZE;
+    }while(board[r][c]!=' ');
+
+    board[r][c]='O';
+    printf("COMPUTER CHOSE: %d %d\n",r+1,c+1);
+}
+
+
+int valid(int *row,int *col){
+    if(scanf("%d %d",row,col)!=2){
+        input();
+        return 0;
+    }
+
+    (*row)--;
+    (*col)--;
+
+    if(*row<0||*row>=SIZE||*col<0||*col>=SIZE)
+        return 0;
+
+    if(board[*row][*col]!=' ')
+        return 0;
+
+    return 1;
+}
+
+int main(){
+    srand(time(NULL));
+    printf("\n");
+    printf("TTTTTTT   IIIII   CCCCC        TTTTTTT     AAAA    CCCCC        TTTTTTT   OOOOO   EEEEEEE\n");
+    printf("   T        I    C                T       A    A  C                T     O     O  E      \n");
+    printf("   T        I    C                T       A    A  C                T     O     O  E      \n");
+    printf("   T        I    C                T       AAAAAA  C                T     O     O  EEEEE  \n");
+    printf("   T        I    C                T       A    A  C                T     O     O  E      \n");
+    printf("   T        I    C                T       A    A  C                T     O     O  E      \n");
+    printf("   T      IIIII   CCCCC           T       A    A   CCCCC           T      OOOOO   EEEEEEE\n");
+    printf("\n\n");
+
+    int mode;
+
+    while(1){
+        printf("1.PLAYER VS PLAYER\n");
+        printf("2.PLAYER VS COMPUTER\n");
+        printf("CHOOSE MODE: ");
+
+        if(scanf("%d",&mode)!=1){
+            input();
+            printf("Invalid choice! Try again later.\n\n");
+            continue;
+        }
+
+        input();
+
+        if(mode==1||mode==2)
+            break;
+
+        printf("Invalid choice! Try again later.\n\n");
+    }
+
+    do{
+        printf("ENTER PLAYER1 NAME: ");
+        fgets(p1name,sizeof(p1name),stdin);
+        p1name[strcspn(p1name,"\n")]=0;
+
+        if(!validname(p1name))
+            printf("Invalid Name! Alphabets only.\n");
+
+    }while(!validname(p1name));
+
+    formatname(p1name);
+
+    if(mode==1){
+        do{
+            printf("ENTER PLAYER2 NAME: ");
+            fgets(p2name,sizeof(p2name),stdin);
+            p2name[strcspn(p2name,"\n")]=0;
+
+            if(!validname(p2name)){
+                printf("Invalid Name! Alphabets only.\n");
+                continue;
+            }
+
+            if(strcmp(p1name,p2name)==0){
+                printf("Both names cannot be same! Enter different name.\n");
+                continue;
+            }
+
+            break;
+
+        }while(1);
+
+        formatname(p2name);
+    }
+    else{
+        strcpy(p2name,"Computer");
+    }
+
+    char choice;
+
+    do{
+        initialize();
+        int player=1;
+
+        while(1){
+            display();
+
+            printf("\nSCORE: %s=%d | %s=%d\n",p1name,p1score,p2name,p2score);
+
+            char mark=(player==1)?'X':'O';
+
+            if(mode==2&&player==2){
+                computer();
+            }
+            else{
+                int row,col;
+
+                printf("%s ENTER ROW & COLUMN: ",(player==1)?p1name:p2name);
+
+                if(!valid(&row,&col)){
+                    printf("INVALID MOVE! TRY AGAIN.\n");
+                    continue;
+                }
+
+                board[row][col]=mark;
+            }
+
+            if(winner(mark)){
+                display();
+                printf("%s WINS!!\n",(player==1)?p1name:p2name);
+
+                if(player==1)p1score++;
+                else p2score++;
+
+                break;
+            }
+
+            if(draw()){
+                display();
+                printf("GAME DRAW!\n");
+                break;
+            }
+
+            player=(player==1)?2:1;
+        }
+
+        printf("Play again? (Y/N): ");
+        scanf(" %c",&choice);
+        input();
+
+    }while(choice=='Y'||choice=='y');
+
+    printf("\nFINAL SCORE\n");
+    printf("%s : %d\n",p1name,p1score);
+    printf("%s : %d\n",p2name,p2score);
+
+    printf("\n\t\t\t\t\t\tTHANKS FOR PLAYING");
+
+    return 0;
+}
